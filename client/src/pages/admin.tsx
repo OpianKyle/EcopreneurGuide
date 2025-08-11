@@ -86,9 +86,15 @@ export default function Admin() {
       <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-brand-blue">
-                <i className="fas fa-rocket mr-2"></i>DigitalPro
+            <div className="flex items-center space-x-8">
+              <div className="text-2xl font-bold text-blue-600">DigitalPro</div>
+              <div className="flex space-x-4">
+                <Button asChild variant="ghost" className="bg-blue-50">
+                  <a href="/admin">Dashboard</a>
+                </Button>
+                <Button asChild variant="ghost" data-testid="nav-manage-products">
+                  <a href="/admin/products">Manage Products</a>
+                </Button>
               </div>
             </div>
             <div className="flex items-center space-x-4">

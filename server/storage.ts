@@ -1,5 +1,7 @@
 import {
   users,
+  categories,
+  subcategories,
   products,
   orders,
   leads,
@@ -8,6 +10,10 @@ import {
   downloads,
   type User,
   type UpsertUser,
+  type Category,
+  type InsertCategory,
+  type Subcategory,
+  type InsertSubcategory,
   type Product,
   type InsertProduct,
   type Order,
