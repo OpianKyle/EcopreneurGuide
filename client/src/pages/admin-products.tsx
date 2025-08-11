@@ -64,7 +64,9 @@ export default function AdminProducts() {
     mutationFn: async (data: any) => {
       return await apiRequest("POST", "/api/products", {
         ...data,
-        price: parseFloat(data.price),
+        price: data.price,
+        categoryId: data.categoryId || null,
+        subcategoryId: data.subcategoryId || null,
       });
     },
     onSuccess: () => {

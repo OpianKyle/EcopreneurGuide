@@ -219,6 +219,8 @@ export const insertProductSchema = createInsertSchema(products).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  price: z.coerce.number().positive("Price must be a positive number"),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).omit({
