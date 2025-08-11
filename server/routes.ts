@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, requireAuth, requireAdmin } from "./auth";
 import { insertLeadSchema, insertSupportTicketSchema, insertProductSchema } from "@shared/schema";
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -15,18 +15,22 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
-  await setupAuth(app);
+  setupAuth(app);
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+  app.get('/api/user', (req: any, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
+    res.json({
+      id: req.user.id,
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      profileImageUrl: req.user.profileImageUrl,
+      isAdmin: req.user.isAdmin,
+      isVerified: req.user.isVerified
+    });
   });
 
   // Lead capture
@@ -50,13 +54,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/products", isAuthenticated, async (req: any, res) => {
+  app.post("/api/products", requireAdmin, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-      
       const productData = insertProductSchema.parse(req.body);
       const product = await storage.createProduct(productData);
       res.json(product);
@@ -85,10 +84,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Order creation after successful payment
-  app.post("/api/orders", isAuthenticated, async (req: any, res) => {
+  app.post("/api/orders", requireAuth, async (req: any, res) => {
     try {
       const { productId, amount, paymentIntentId } = req.body;
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
 
       const order = await storage.createOrder({
         userId,
@@ -99,9 +98,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Convert lead if they signed up from email
-      const user = await storage.getUser(userId);
-      if (user?.email) {
-        await storage.convertLead(user.email);
+      if (req.user.email) {
+        await storage.convertLead(req.user.email);
       }
 
       res.json(order);
@@ -111,10 +109,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User orders
-  app.get("/api/my-orders", isAuthenticated, async (req: any, res) => {
+  app.get("/api/my-orders", requireAuth, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const orders = await storage.getOrdersByUser(userId);
+      const orders = await storage.getOrdersByUser(req.user.id);
       res.json(orders);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching orders: " + error.message });
@@ -122,10 +119,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User downloads
-  app.get("/api/my-downloads", isAuthenticated, async (req: any, res) => {
+  app.get("/api/my-downloads", requireAuth, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const downloads = await storage.getDownloadsByUser(userId);
+      const downloads = await storage.getDownloadsByUser(req.user.id);
       res.json(downloads);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching downloads: " + error.message });
@@ -133,11 +129,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Support tickets
-  app.post("/api/support-tickets", isAuthenticated, async (req: any, res) => {
+  app.post("/api/support-tickets", requireAuth, async (req: any, res) => {
     try {
       const ticketData = insertSupportTicketSchema.parse({
         ...req.body,
-        userId: req.user.claims.sub,
+        userId: req.user.id,
       });
       const ticket = await storage.createSupportTicket(ticketData);
       res.json(ticket);
@@ -146,10 +142,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/my-support-tickets", isAuthenticated, async (req: any, res) => {
+  app.get("/api/my-support-tickets", requireAuth, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const tickets = await storage.getSupportTicketsByUser(userId);
+      const tickets = await storage.getSupportTicketsByUser(req.user.id);
       res.json(tickets);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching support tickets: " + error.message });
@@ -157,13 +152,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin routes
-  app.get("/api/admin/stats", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/stats", requireAdmin, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const stats = await storage.getAdminStats();
       res.json(stats);
     } catch (error: any) {
@@ -171,13 +161,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/orders", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/orders", requireAdmin, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const orders = await storage.getAllOrders();
       res.json(orders);
     } catch (error: any) {
@@ -185,13 +170,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/leads", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/leads", requireAdmin, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const leads = await storage.getLeads();
       res.json(leads);
     } catch (error: any) {
@@ -199,13 +179,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/support-tickets", isAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/support-tickets", requireAdmin, async (req: any, res) => {
     try {
-      const user = await storage.getUser(req.user.claims.sub);
-      if (!user?.isAdmin) {
-        return res.status(403).json({ message: "Admin access required" });
-      }
-
       const tickets = await storage.getSupportTickets();
       res.json(tickets);
     } catch (error: any) {
