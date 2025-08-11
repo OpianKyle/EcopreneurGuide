@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -10,6 +10,126 @@ import { Badge } from "@/components/ui/badge";
 interface LeadData {
   firstName: string;
   email: string;
+}
+
+// Testimonials data
+const testimonials = [
+  {
+    id: 1,
+    text: "I made $2,300 in my first week reselling this system! The materials are professional and the license is legitimate.",
+    name: "Sarah Johnson",
+    role: "Online Business Owner",
+    initial: "S",
+    color: "green-500"
+  },
+  {
+    id: 2,
+    text: "The best investment I've made in my online business! Everything is done-for-you and ready to implement immediately.",
+    name: "Mike Chen",
+    role: "Digital Entrepreneur", 
+    initial: "M",
+    color: "blue-500"
+  },
+  {
+    id: 3,
+    text: "Finally, a product that delivers what it promises. The quality is exceptional and support is amazing!",
+    name: "Alex Rivera",
+    role: "Marketing Consultant",
+    initial: "A", 
+    color: "green-600"
+  },
+  {
+    id: 4,
+    text: "Made my first $1,000 in just 3 days! The step-by-step training makes everything so clear and easy to follow.",
+    name: "Jessica Williams",
+    role: "Freelancer",
+    initial: "J",
+    color: "blue-600"
+  },
+  {
+    id: 5,
+    text: "This is exactly what I needed to scale my business. The master resell rights give me complete freedom to profit.",
+    name: "David Thompson",
+    role: "E-commerce Owner",
+    initial: "D",
+    color: "green-500"
+  }
+];
+
+
+
+// Auto-rotating testimonials carousel component
+function TestimonialsCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    }, 4000); // Change every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="py-12 bg-green-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Real Results from Real People</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">Join hundreds of entrepreneurs already profiting from our system</p>
+        </div>
+        
+        <div className="relative overflow-hidden">
+          <div 
+            className="flex transition-transform duration-1000 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          >
+            {testimonials.map((testimonial) => (
+              <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white p-8 rounded-xl shadow-lg border-l-4 border-green-500">
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="flex space-x-1">
+                        {[...Array(5)].map((_, i) => (
+                          <div key={i} className="w-5 h-5 bg-green-500 rounded-full"></div>
+                        ))}
+                      </div>
+                      <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
+                    </div>
+                    <blockquote className="text-gray-800 text-lg leading-relaxed text-center mb-6 font-medium">
+                      "{testimonial.text}"
+                    </blockquote>
+                    <div className="flex items-center justify-center">
+                      <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                        {testimonial.initial}
+                      </div>
+                      <div className="text-center">
+                        <p className="font-bold text-gray-900 text-lg">{testimonial.name}</p>
+                        <p className="text-gray-600">{testimonial.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Carousel indicators */}
+          <div className="flex justify-center mt-8 space-x-2">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                  index === currentIndex ? 'bg-green-500' : 'bg-gray-300'
+                }`}
+                onClick={() => setCurrentIndex(index)}
+                data-testid={`carousel-indicator-${index}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function Landing() {
@@ -66,7 +186,7 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20">
+      <section className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
@@ -146,7 +266,7 @@ export default function Landing() {
       </section>
 
       {/* Problem → Solution Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Right Content */}
@@ -190,7 +310,7 @@ export default function Landing() {
       </section>
 
       {/* What's Included Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -257,104 +377,11 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="py-20 bg-green-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Right Content */}
-            <div className="lg:order-2">
-              <h2 className="text-4xl font-bold text-gray-900 mb-8">Real Results from Real People</h2>
-              
-              <div className="space-y-6">
-                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
-                  <div className="flex items-center mb-4">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="w-4 h-4 bg-green-500 rounded-full"></div>
-                      ))}
-                    </div>
-                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
-                  </div>
-                  <p className="text-gray-800 mb-4 leading-relaxed">
-                    "I made $2,300 in my first week reselling this system! The materials are professional and the license is legitimate."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                      S
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Sarah Johnson</p>
-                      <p className="text-gray-600 text-sm">Online Business Owner</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
-                  <div className="flex items-center mb-4">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                      ))}
-                    </div>
-                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
-                  </div>
-                  <p className="text-gray-800 mb-4 leading-relaxed">
-                    "The best investment I've made in my online business! Everything is done-for-you and ready to implement immediately."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                      M
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Mike Chen</p>
-                      <p className="text-gray-600 text-sm">Digital Entrepreneur</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-600">
-                  <div className="flex items-center mb-4">
-                    <div className="flex space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="w-4 h-4 bg-green-600 rounded-full"></div>
-                      ))}
-                    </div>
-                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
-                  </div>
-                  <p className="text-gray-800 mb-4 leading-relaxed">
-                    "Finally, a product that delivers what it promises. The quality is exceptional and support is amazing!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                      A
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Alex Rivera</p>
-                      <p className="text-gray-600 text-sm">Marketing Consultant</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Left Content - Image Placeholder */}
-            <div className="lg:order-1">
-              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl p-8 h-80 flex items-center justify-center">
-                <svg className="w-48 h-32 text-green-300" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                <div className="ml-4">
-                  <p className="text-gray-600 font-medium">Customer Testimonials</p>
-                  <p className="text-sm text-gray-500">Real Success Stories</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Social Proof Section - Auto Carousel */}
+      <TestimonialsCarousel />
 
       {/* How It Works Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -418,7 +445,7 @@ export default function Landing() {
       </section>
 
       {/* Limited-Time Bonuses Section */}
-      <section className="py-20 bg-blue-50">
+      <section className="py-12 bg-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Right Content */}
@@ -472,7 +499,7 @@ export default function Landing() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gradient-to-br from-green-500 via-blue-500 to-green-600 text-white">
+      <section className="py-12 bg-gradient-to-br from-green-500 via-blue-500 to-green-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
@@ -526,7 +553,7 @@ export default function Landing() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Right Content */}
@@ -580,7 +607,7 @@ export default function Landing() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-white border-t-4 border-green-400">
+      <section className="py-12 bg-white border-t-4 border-green-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left Content */}
