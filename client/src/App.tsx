@@ -10,6 +10,8 @@ import Sales from "@/pages/sales.tsx";
 import Upsell from "@/pages/upsell.tsx";
 import Dashboard from "@/pages/dashboard";
 import Admin from "@/pages/admin";
+import AdminProducts from "@/pages/admin-products";
+import Products from "@/pages/products";
 import Checkout from "@/pages/checkout.tsx";
 import Home from "@/pages/home.tsx";
 import Auth from "@/pages/auth";
@@ -29,7 +31,9 @@ function Router() {
         <>
           <Route path="/" component={Home} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/products" component={Products} />
           <Route path="/admin" component={Admin} />
+          <Route path="/admin/products" component={AdminProducts} />
           <Route path="/sales" component={Sales} />
           <Route path="/upsell" component={Upsell} />
           <Route path="/checkout" component={Checkout} />

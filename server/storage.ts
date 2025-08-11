@@ -35,8 +35,22 @@ export interface IStorage {
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
 
+  // Category operations
+  getCategories(): Promise<Category[]>;
+  getCategory(id: string): Promise<Category | undefined>;
+  createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category>;
+
+  // Subcategory operations
+  getSubcategories(): Promise<Subcategory[]>;
+  getSubcategoriesByCategory(categoryId: string): Promise<Subcategory[]>;
+  getSubcategory(id: string): Promise<Subcategory | undefined>;
+  createSubcategory(subcategory: InsertSubcategory): Promise<Subcategory>;
+  updateSubcategory(id: string, subcategory: Partial<InsertSubcategory>): Promise<Subcategory>;
+
   // Product operations
   getProducts(): Promise<Product[]>;
+  getProductsWithCategories(): Promise<(Product & { category?: Category; subcategory?: Subcategory })[]>;
   getProduct(id: string): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product>;
@@ -144,9 +158,98 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  // Category operations
+  async getCategories(): Promise<Category[]> {
+    return await db.select().from(categories).where(eq(categories.isActive, true)).orderBy(categories.name);
+  }
+
+  async getCategory(id: string): Promise<Category | undefined> {
+    const [category] = await db.select().from(categories).where(eq(categories.id, id));
+    return category;
+  }
+
+  async createCategory(category: InsertCategory): Promise<Category> {
+    const [newCategory] = await db.insert(categories).values(category).returning();
+    return newCategory;
+  }
+
+  async updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category> {
+    const [updatedCategory] = await db
+      .update(categories)
+      .set({ ...category, updatedAt: new Date() })
+      .where(eq(categories.id, id))
+      .returning();
+    return updatedCategory;
+  }
+
+  // Subcategory operations
+  async getSubcategories(): Promise<Subcategory[]> {
+    return await db.select().from(subcategories).where(eq(subcategories.isActive, true)).orderBy(subcategories.name);
+  }
+
+  async getSubcategoriesByCategory(categoryId: string): Promise<Subcategory[]> {
+    return await db
+      .select()
+      .from(subcategories)
+      .where(and(eq(subcategories.categoryId, categoryId), eq(subcategories.isActive, true)))
+      .orderBy(subcategories.name);
+  }
+
+  async getSubcategory(id: string): Promise<Subcategory | undefined> {
+    const [subcategory] = await db.select().from(subcategories).where(eq(subcategories.id, id));
+    return subcategory;
+  }
+
+  async createSubcategory(subcategory: InsertSubcategory): Promise<Subcategory> {
+    const [newSubcategory] = await db.insert(subcategories).values(subcategory).returning();
+    return newSubcategory;
+  }
+
+  async updateSubcategory(id: string, subcategory: Partial<InsertSubcategory>): Promise<Subcategory> {
+    const [updatedSubcategory] = await db
+      .update(subcategories)
+      .set({ ...subcategory, updatedAt: new Date() })
+      .where(eq(subcategories.id, id))
+      .returning();
+    return updatedSubcategory;
+  }
+
   // Product operations
   async getProducts(): Promise<Product[]> {
     return await db.select().from(products).where(eq(products.isActive, true)).orderBy(desc(products.createdAt));
+  }
+
+  async getProductsWithCategories(): Promise<(Product & { category?: Category; subcategory?: Subcategory })[]> {
+    const result = await db
+      .select({
+        id: products.id,
+        name: products.name,
+        description: products.description,
+        price: products.price,
+        downloadUrl: products.downloadUrl,
+        categoryId: products.categoryId,
+        subcategoryId: products.subcategoryId,
+        isActive: products.isActive,
+        createdAt: products.createdAt,
+        updatedAt: products.updatedAt,
+        category: {
+          id: categories.id,
+          name: categories.name,
+          description: categories.description,
+        },
+        subcategory: {
+          id: subcategories.id,
+          name: subcategories.name,
+          description: subcategories.description,
+        },
+      })
+      .from(products)
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .leftJoin(subcategories, eq(products.subcategoryId, subcategories.id))
+      .where(eq(products.isActive, true))
+      .orderBy(desc(products.createdAt));
+
+    return result as any;
   }
 
   async getProduct(id: string): Promise<Product | undefined> {

@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
 import { setupAuth, requireAuth, requireAdmin } from "./auth";
-import { insertLeadSchema, insertSupportTicketSchema, insertProductSchema } from "@shared/schema";
+import { insertLeadSchema, insertSupportTicketSchema, insertProductSchema, insertCategorySchema, insertSubcategorySchema } from "@shared/schema";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -28,10 +28,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Categories
+  app.get("/api/categories", async (req, res) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching categories: " + error.message });
+    }
+  });
+
+  app.post("/api/categories", requireAdmin, async (req: any, res) => {
+    try {
+      const categoryData = insertCategorySchema.parse(req.body);
+      const category = await storage.createCategory(categoryData);
+      res.json(category);
+    } catch (error: any) {
+      res.status(400).json({ message: "Error creating category: " + error.message });
+    }
+  });
+
+  // Subcategories
+  app.get("/api/subcategories", async (req, res) => {
+    try {
+      const subcategories = await storage.getSubcategories();
+      res.json(subcategories);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching subcategories: " + error.message });
+    }
+  });
+
+  app.get("/api/subcategories/category/:categoryId", async (req, res) => {
+    try {
+      const { categoryId } = req.params;
+      const subcategories = await storage.getSubcategoriesByCategory(categoryId);
+      res.json(subcategories);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching subcategories: " + error.message });
+    }
+  });
+
+  app.post("/api/subcategories", requireAdmin, async (req: any, res) => {
+    try {
+      const subcategoryData = insertSubcategorySchema.parse(req.body);
+      const subcategory = await storage.createSubcategory(subcategoryData);
+      res.json(subcategory);
+    } catch (error: any) {
+      res.status(400).json({ message: "Error creating subcategory: " + error.message });
+    }
+  });
+
   // Products
   app.get("/api/products", async (req, res) => {
     try {
-      const products = await storage.getProducts();
+      const products = await storage.getProductsWithCategories();
       res.json(products);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching products: " + error.message });
