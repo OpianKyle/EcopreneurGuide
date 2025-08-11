@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -10,6 +11,15 @@ import type { Order, Download, User } from "@shared/schema";
 export default function Dashboard() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading, user, logoutMutation } = useAuth();
+  const [, setLocation] = useLocation();
+
+  // Redirect admin users to admin panel
+  useEffect(() => {
+    if (!isLoading && user && (user as User).isAdmin) {
+      setLocation("/admin");
+      return;
+    }
+  }, [user, isLoading, setLocation]);
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -63,6 +73,15 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">Welcome, {(user as User)?.firstName || "User"}!</span>
+              {(user as User)?.isAdmin && (
+                <Button 
+                  variant="default" 
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => setLocation("/admin")}
+                >
+                  Admin Panel
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 className="text-gray-700 border-gray-300 hover:bg-gray-100"
