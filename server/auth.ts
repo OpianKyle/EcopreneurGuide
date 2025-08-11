@@ -288,25 +288,8 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
-  // Google OAuth routes
-  app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-  app.get(
-    "/api/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/auth?error=google_failed" }),
-    (req, res) => {
-      res.redirect("/dashboard");
-    }
-  );
-
-  // GitHub OAuth routes
-  app.get("/api/auth/github", passport.authenticate("github", { scope: ["user:email"] }));
-  app.get(
-    "/api/auth/github/callback",
-    passport.authenticate("github", { failureRedirect: "/auth?error=github_failed" }),
-    (req, res) => {
-      res.redirect("/dashboard");
-    }
-  );
+  // OAuth routes (disabled for now)
+  // Google and GitHub OAuth routes will be added here when callback URLs are configured
 
   app.post("/api/logout", (req, res, next) => {
     req.logout((err) => {
