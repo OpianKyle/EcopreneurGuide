@@ -57,7 +57,7 @@ export default function Landing() {
             </div>
             <div className="flex items-center space-x-4">
               <Button asChild variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-100">
-                <a href="/api/login">Login</a>
+                <a href="/auth">Login</a>
               </Button>
             </div>
           </div>
