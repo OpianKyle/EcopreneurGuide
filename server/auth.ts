@@ -44,7 +44,7 @@ export function setupAuth(app: Express) {
   const PostgresSessionStore = connectPg(session);
   const sessionStore = new PostgresSessionStore({
     conString: process.env.DATABASE_URL,
-    createTableIfMissing: true,
+    createTableIfMissing: false,
   });
 
   const sessionSettings: session.SessionOptions = {
@@ -96,8 +96,8 @@ export function setupAuth(app: Express) {
     )
   );
 
-  // Google Strategy
-  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  // OAuth disabled for initial setup
+  if (false) {
     passport.use(
       new GoogleStrategy(
         {
@@ -148,8 +148,8 @@ export function setupAuth(app: Express) {
     );
   }
 
-  // GitHub Strategy
-  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  // GitHub OAuth disabled for initial setup
+  if (false) {
     passport.use(
       new GitHubStrategy(
         {

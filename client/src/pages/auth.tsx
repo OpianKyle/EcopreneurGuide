@@ -288,6 +288,8 @@ export default function AuthPage() {
                     variant="outline"
                     onClick={handleGoogleAuth}
                     className="w-full"
+                    disabled
+                    title="OAuth setup in progress"
                   >
                     <FaGoogle className="mr-2 h-4 w-4" />
                     Google
@@ -297,6 +299,8 @@ export default function AuthPage() {
                     variant="outline"
                     onClick={handleGithubAuth}
                     className="w-full"
+                    disabled
+                    title="OAuth setup in progress"
                   >
                     <Github className="mr-2 h-4 w-4" />
                     GitHub
