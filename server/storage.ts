@@ -1,0 +1,256 @@
+import {
+  users,
+  products,
+  orders,
+  leads,
+  supportTickets,
+  emailCampaigns,
+  downloads,
+  type User,
+  type UpsertUser,
+  type Product,
+  type InsertProduct,
+  type Order,
+  type InsertOrder,
+  type Lead,
+  type InsertLead,
+  type SupportTicket,
+  type InsertSupportTicket,
+  type EmailCampaign,
+  type InsertEmailCampaign,
+  type Download,
+  type InsertDownload,
+} from "@shared/schema";
+import { db } from "./db";
+import { eq, desc, count, sum, and } from "drizzle-orm";
+
+export interface IStorage {
+  // User operations - mandatory for Replit Auth
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
+
+  // Product operations
+  getProducts(): Promise<Product[]>;
+  getProduct(id: string): Promise<Product | undefined>;
+  createProduct(product: InsertProduct): Promise<Product>;
+  updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product>;
+
+  // Order operations
+  createOrder(order: InsertOrder): Promise<Order>;
+  getOrder(id: string): Promise<Order | undefined>;
+  getOrdersByUser(userId: string): Promise<Order[]>;
+  getAllOrders(): Promise<Order[]>;
+  updateOrderStatus(id: string, status: string): Promise<Order>;
+
+  // Lead operations
+  createLead(lead: InsertLead): Promise<Lead>;
+  getLeads(): Promise<Lead[]>;
+  convertLead(email: string): Promise<void>;
+
+  // Support ticket operations
+  createSupportTicket(ticket: InsertSupportTicket): Promise<SupportTicket>;
+  getSupportTickets(): Promise<SupportTicket[]>;
+  getSupportTicketsByUser(userId: string): Promise<SupportTicket[]>;
+  updateSupportTicketStatus(id: string, status: string): Promise<SupportTicket>;
+
+  // Email campaign operations
+  createEmailCampaign(campaign: InsertEmailCampaign): Promise<EmailCampaign>;
+  getEmailCampaigns(): Promise<EmailCampaign[]>;
+  updateEmailCampaignStats(id: string, stats: { sentCount?: number; openCount?: number; clickCount?: number }): Promise<EmailCampaign>;
+
+  // Download operations
+  createDownload(download: InsertDownload): Promise<Download>;
+  getDownloadsByUser(userId: string): Promise<Download[]>;
+
+  // Analytics
+  getAdminStats(): Promise<{
+    totalSales: number;
+    totalCustomers: number;
+    totalLeads: number;
+    totalOrders: number;
+  }>;
+}
+
+export class DatabaseStorage implements IStorage {
+  // User operations
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
+  async updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        stripeCustomerId: customerId,
+        stripeSubscriptionId: subscriptionId,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  // Product operations
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.isActive, true)).orderBy(desc(products.createdAt));
+  }
+
+  async getProduct(id: string): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product;
+  }
+
+  async createProduct(product: InsertProduct): Promise<Product> {
+    const [newProduct] = await db.insert(products).values(product).returning();
+    return newProduct;
+  }
+
+  async updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product> {
+    const [updatedProduct] = await db
+      .update(products)
+      .set({ ...product, updatedAt: new Date() })
+      .where(eq(products.id, id))
+      .returning();
+    return updatedProduct;
+  }
+
+  // Order operations
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const [newOrder] = await db.insert(orders).values(order).returning();
+    return newOrder;
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order;
+  }
+
+  async getOrdersByUser(userId: string): Promise<Order[]> {
+    return await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
+  }
+
+  async getAllOrders(): Promise<Order[]> {
+    return await db.select().from(orders).orderBy(desc(orders.createdAt));
+  }
+
+  async updateOrderStatus(id: string, status: string): Promise<Order> {
+    const [updatedOrder] = await db
+      .update(orders)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(orders.id, id))
+      .returning();
+    return updatedOrder;
+  }
+
+  // Lead operations
+  async createLead(lead: InsertLead): Promise<Lead> {
+    const [newLead] = await db.insert(leads).values(lead).returning();
+    return newLead;
+  }
+
+  async getLeads(): Promise<Lead[]> {
+    return await db.select().from(leads).orderBy(desc(leads.createdAt));
+  }
+
+  async convertLead(email: string): Promise<void> {
+    await db.update(leads).set({ isConverted: true }).where(eq(leads.email, email));
+  }
+
+  // Support ticket operations
+  async createSupportTicket(ticket: InsertSupportTicket): Promise<SupportTicket> {
+    const [newTicket] = await db.insert(supportTickets).values(ticket).returning();
+    return newTicket;
+  }
+
+  async getSupportTickets(): Promise<SupportTicket[]> {
+    return await db.select().from(supportTickets).orderBy(desc(supportTickets.createdAt));
+  }
+
+  async getSupportTicketsByUser(userId: string): Promise<SupportTicket[]> {
+    return await db.select().from(supportTickets).where(eq(supportTickets.userId, userId)).orderBy(desc(supportTickets.createdAt));
+  }
+
+  async updateSupportTicketStatus(id: string, status: string): Promise<SupportTicket> {
+    const [updatedTicket] = await db
+      .update(supportTickets)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(supportTickets.id, id))
+      .returning();
+    return updatedTicket;
+  }
+
+  // Email campaign operations
+  async createEmailCampaign(campaign: InsertEmailCampaign): Promise<EmailCampaign> {
+    const [newCampaign] = await db.insert(emailCampaigns).values(campaign).returning();
+    return newCampaign;
+  }
+
+  async getEmailCampaigns(): Promise<EmailCampaign[]> {
+    return await db.select().from(emailCampaigns).orderBy(desc(emailCampaigns.createdAt));
+  }
+
+  async updateEmailCampaignStats(
+    id: string,
+    stats: { sentCount?: number; openCount?: number; clickCount?: number }
+  ): Promise<EmailCampaign> {
+    const [updatedCampaign] = await db
+      .update(emailCampaigns)
+      .set(stats)
+      .where(eq(emailCampaigns.id, id))
+      .returning();
+    return updatedCampaign;
+  }
+
+  // Download operations
+  async createDownload(download: InsertDownload): Promise<Download> {
+    const [newDownload] = await db.insert(downloads).values(download).returning();
+    return newDownload;
+  }
+
+  async getDownloadsByUser(userId: string): Promise<Download[]> {
+    return await db.select().from(downloads).where(eq(downloads.userId, userId)).orderBy(desc(downloads.createdAt));
+  }
+
+  // Analytics
+  async getAdminStats(): Promise<{
+    totalSales: number;
+    totalCustomers: number;
+    totalLeads: number;
+    totalOrders: number;
+  }> {
+    const [salesResult] = await db
+      .select({ total: sum(orders.amount) })
+      .from(orders)
+      .where(eq(orders.status, "completed"));
+
+    const [customersResult] = await db.select({ count: count() }).from(users);
+    const [leadsResult] = await db.select({ count: count() }).from(leads);
+    const [ordersResult] = await db.select({ count: count() }).from(orders);
+
+    return {
+      totalSales: Number(salesResult?.total || 0),
+      totalCustomers: customersResult?.count || 0,
+      totalLeads: leadsResult?.count || 0,
+      totalOrders: ordersResult?.count || 0,
+    };
+  }
+}
+
+export const storage = new DatabaseStorage();
