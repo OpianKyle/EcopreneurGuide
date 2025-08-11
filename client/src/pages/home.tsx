@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,6 +7,14 @@ import type { User } from "@shared/schema";
 
 export default function Home() {
   const { user, logoutMutation } = useAuth();
+  const [, setLocation] = useLocation();
+
+  // Redirect admin users to admin panel
+  useEffect(() => {
+    if (user && (user as User).isAdmin) {
+      setLocation("/admin");
+    }
+  }, [user, setLocation]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -19,6 +29,15 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">Welcome, {(user as User)?.firstName || "User"}!</span>
+              {(user as User)?.isAdmin && (
+                <Button 
+                  variant="default" 
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                  onClick={() => setLocation("/admin")}
+                >
+                  Admin Panel
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 className="text-gray-700 border-gray-300 hover:bg-gray-100"
