@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
   error: Error | null;
   loginMutation: UseMutationResult<User, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
@@ -91,10 +92,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       queryClient.setQueryData(["/api/user"], null);
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
         title: "Logged out",
         description: "You've been logged out successfully.",
       });
+      // Redirect to home page after logout
+      window.location.href = "/";
     },
     onError: (error: Error) => {
       toast({
@@ -110,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user: user ?? null,
         isLoading,
+        isAuthenticated: !!user,
         error,
         loginMutation,
         logoutMutation,
