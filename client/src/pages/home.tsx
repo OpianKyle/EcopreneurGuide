@@ -13,8 +13,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <div className="text-2xl font-bold text-brand-blue">
-                <i className="fas fa-rocket mr-2"></i>DigitalPro
+              <div className="text-2xl font-bold text-orange-600">
+                <i className="fas fa-rocket mr-2"></i>Opian Entrepreneur
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -31,7 +31,7 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Welcome to Your Digital Empire, {(user as User)?.firstName || "User"}! 🚀
+            Welcome to Opian Entrepreneur, {(user as User)?.firstName || "User"}! 🚀
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             You're now part of an exclusive community of entrepreneurs building profitable digital businesses with Master Resell Rights.
