@@ -52,8 +52,8 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <div className="text-2xl font-bold text-orange-600">
-                <i className="fas fa-rocket mr-2"></i>Opian Entrepreneur
+              <div className="text-2xl font-bold text-blue-600">
+                Opian Entrepreneur
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -66,65 +66,81 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-50 via-white to-orange-100 py-16">
+      <section className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Urgency Banner */}
-          <div className="text-center mb-8">
-            <div className="bg-red-600 text-white py-3 px-6 rounded-full mb-8 inline-block animate-pulse">
-              <span className="text-sm font-bold">⏰ URGENT: Price increases after first 50 buyers!</span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div>
+              {/* Urgency Banner */}
+              <div className="mb-8">
+                <div className="bg-blue-600 text-white py-3 px-6 rounded-lg inline-block">
+                  <span className="text-sm font-bold">URGENT: Price increases after first 50 buyers!</span>
+                </div>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+                Own This <span className="text-blue-600">High-Demand</span><br />
+                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                  Digital Product Series
+                </span>
+              </h1>
+              
+              {/* Subheadline */}
+              <h2 className="text-xl md:text-2xl font-bold text-gray-700 mb-6">
+                With Full Master Resell Rights - <span className="text-green-600">Just $49!</span>
+              </h2>
+              
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Get Instant Access + The Legal Right to Sell It as Your Own & Keep 100% Profits!
+              </p>
+
+              {/* Hero Benefits */}
+              <div className="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
+                <div className="space-y-4">
+                  <div className="flex items-start">
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-3 mr-4 flex-shrink-0"></div>
+                    <span className="text-gray-800 font-medium">High-Value Digital Product Series (Videos, PDFs, Templates)</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-3 mr-4 flex-shrink-0"></div>
+                    <span className="text-gray-800 font-medium">Master Resell Rights Included – Sell It & Keep All Profits!</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-3 mr-4 flex-shrink-0"></div>
+                    <span className="text-gray-800 font-medium">Ready-to-Use Content – No Tech Skills Needed</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-3 mr-4 flex-shrink-0"></div>
+                    <span className="text-gray-800 font-medium">30-Day Money-Back Guarantee – Zero Risk!</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Primary CTA */}
+              <Button 
+                asChild
+                size="lg" 
+                className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl py-6 px-12 rounded-xl shadow-lg mb-4"
+              >
+                <a href="/sales" data-testid="button-get-access">GET INSTANT ACCESS NOW – $49</a>
+              </Button>
+              
+              <p className="text-gray-500 text-sm">30-Day Money-Back Guarantee • Instant Access • No Monthly Fees</p>
             </div>
-          </div>
 
-          <div className="text-center max-w-5xl mx-auto">
-            {/* Main Headline */}
-            <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
-              🚀 Own This <span className="text-orange-600">High-Demand</span><br />
-              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                Digital Product Series
-              </span>
-            </h1>
-            
-            {/* Subheadline */}
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-700 mb-8">
-              With Full Master Resell Rights - <span className="text-green-600">Just $49!</span>
-            </h2>
-            
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed">
-              Get Instant Access + The Legal Right to Sell It as Your Own & Keep 100% Profits!
-            </p>
-
-            {/* Hero Benefits */}
-            <div className="bg-green-50 border-l-4 border-green-500 p-8 mb-12 text-left max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-start">
-                  <i className="fas fa-check-circle text-green-600 text-xl mr-4 mt-1"></i>
-                  <span className="text-lg font-medium text-gray-800">High-Value Digital Product Series (Videos, PDFs, Templates)</span>
-                </div>
-                <div className="flex items-start">
-                  <i className="fas fa-check-circle text-green-600 text-xl mr-4 mt-1"></i>
-                  <span className="text-lg font-medium text-gray-800">Master Resell Rights Included – Sell It & Keep All Profits!</span>
-                </div>
-                <div className="flex items-start">
-                  <i className="fas fa-check-circle text-green-600 text-xl mr-4 mt-1"></i>
-                  <span className="text-lg font-medium text-gray-800">Ready-to-Use Content – No Tech Skills Needed</span>
-                </div>
-                <div className="flex items-start">
-                  <i className="fas fa-check-circle text-green-600 text-xl mr-4 mt-1"></i>
-                  <span className="text-lg font-medium text-gray-800">30-Day Money-Back Guarantee – Zero Risk!</span>
+            {/* Right Content - Placeholder for Hero Image */}
+            <div className="lg:pl-8">
+              <div className="bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl p-8 h-96 flex items-center justify-center">
+                <svg className="w-64 h-48 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4 text-center">
+                  <p className="text-gray-600 font-medium">Digital Product Preview</p>
+                  <p className="text-sm text-gray-500">Professional Training Materials</p>
                 </div>
               </div>
             </div>
-
-            {/* Primary CTA */}
-            <Button 
-              asChild
-              size="lg" 
-              className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-2xl py-8 px-16 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 mb-8"
-            >
-              <a href="/sales" data-testid="button-get-access">🔥 GET INSTANT ACCESS NOW – $49</a>
-            </Button>
-            
-            <p className="text-gray-500 text-sm">30-Day Money-Back Guarantee • Instant Access • No Monthly Fees</p>
           </div>
         </div>
       </section>
@@ -132,23 +148,42 @@ export default function Landing() {
       {/* Problem → Solution Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16">Why This Product?</h2>
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="text-center">
-              <div className="text-8xl mb-6">❌</div>
-              <h3 className="text-3xl font-bold text-red-600 mb-6">The Problem</h3>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Struggling to create profitable digital products from scratch? Spending months building content 
-                with no guarantee of success?
-              </p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Right Content */}
+            <div className="lg:order-2">
+              <h2 className="text-4xl font-bold text-gray-900 mb-8">Why This Product?</h2>
+              
+              <div className="space-y-8">
+                <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-r-lg">
+                  <h3 className="text-2xl font-bold text-red-600 mb-4">The Problem</h3>
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    Struggling to create profitable digital products from scratch? Spending months building content 
+                    with no guarantee of success? Most entrepreneurs waste countless hours and money trying to develop 
+                    their own products.
+                  </p>
+                </div>
+                
+                <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                  <h3 className="text-2xl font-bold text-green-600 mb-4">The Solution</h3>
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    Skip the hard work with our done-for-you series that's ready to sell! 
+                    Start earning from day one with proven products that customers actually want to buy.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-8xl mb-6">✅</div>
-              <h3 className="text-3xl font-bold text-green-600 mb-6">The Solution</h3>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Skip the hard work with our done-for-you series that's ready to sell! 
-                Start earning from day one with proven products.
-              </p>
+
+            {/* Left Content - Image Placeholder */}
+            <div className="lg:order-1">
+              <div className="bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <svg className="w-48 h-32 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Problem vs Solution</p>
+                  <p className="text-sm text-gray-500">Visual Comparison</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -157,116 +192,160 @@ export default function Landing() {
       {/* What's Included Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">What's Included?</h2>
-          <p className="text-xl text-gray-600 text-center mb-16">Everything you need to start selling immediately</p>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <i className="fas fa-video text-white text-3xl"></i>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">What's Included?</h2>
+              <p className="text-xl text-gray-600 mb-10">Everything you need to start selling immediately</p>
+              
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="w-6 h-6 bg-white rounded"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Training Modules</h3>
+                    <p className="text-gray-600">Professional video content + comprehensive PDF guides that teach proven strategies</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="w-6 h-6 bg-white rounded"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Sales Materials</h3>
+                    <p className="text-gray-600">Ready-made sales pages & proven email sequences that convert visitors into customers</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="w-6 h-6 bg-white rounded"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Master Resell License</h3>
+                    <p className="text-gray-600">Legal rights to rebrand and resell everything with full commercial permissions</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <div className="w-6 h-6 bg-white rounded"></div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Exclusive Bonuses</h3>
+                    <p className="text-gray-600">Templates, checklists & implementation guides worth over $200</p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Training Modules</h3>
-              <p className="text-gray-600">Professional video content + comprehensive PDF guides</p>
             </div>
-            
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <i className="fas fa-file-alt text-white text-3xl"></i>
+
+            {/* Right Content - Image Placeholder */}
+            <div>
+              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl p-8 h-96 flex items-center justify-center">
+                <svg className="w-64 h-48 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Product Components</p>
+                  <p className="text-sm text-gray-500">Complete Package Overview</p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Sales Materials</h3>
-              <p className="text-gray-600">Ready-made sales pages & proven email sequences</p>
-            </div>
-            
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <i className="fas fa-certificate text-white text-3xl"></i>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Master Resell License</h3>
-              <p className="text-gray-600">Legal rights to rebrand and resell everything</p>
-            </div>
-            
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <i className="fas fa-gift text-white text-3xl"></i>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Exclusive Bonuses</h3>
-              <p className="text-gray-600">Templates, checklists & implementation guides</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Social Proof Section */}
-      <section className="py-20 bg-yellow-50">
+      <section className="py-20 bg-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16">Real Results from Real People</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border-l-4 border-yellow-500">
-              <div className="flex items-center mb-6">
-                <div className="flex text-yellow-500">
-                  {[...Array(5)].map((_, i) => (
-                    <i key={i} className="fas fa-star text-xl"></i>
-                  ))}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Right Content */}
+            <div className="lg:order-2">
+              <h2 className="text-4xl font-bold text-gray-900 mb-8">Real Results from Real People</h2>
+              
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                  <div className="flex items-center mb-4">
+                    <div className="flex space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-4 h-4 bg-green-500 rounded-full"></div>
+                      ))}
+                    </div>
+                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
+                  </div>
+                  <p className="text-gray-800 mb-4 leading-relaxed">
+                    "I made $2,300 in my first week reselling this system! The materials are professional and the license is legitimate."
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      S
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900">Sarah Johnson</p>
+                      <p className="text-gray-600 text-sm">Online Business Owner</p>
+                    </div>
+                  </div>
                 </div>
-                <span className="ml-3 text-gray-600 font-medium">Verified Purchase</span>
-              </div>
-              <p className="text-gray-800 mb-6 text-lg italic leading-relaxed">
-                "I made $2,300 in my first week reselling this system! The materials are professional and the license is legitimate."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                  S
+                
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                  <div className="flex items-center mb-4">
+                    <div className="flex space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                      ))}
+                    </div>
+                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
+                  </div>
+                  <p className="text-gray-800 mb-4 leading-relaxed">
+                    "The best investment I've made in my online business! Everything is done-for-you and ready to implement immediately."
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      M
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900">Mike Chen</p>
+                      <p className="text-gray-600 text-sm">Digital Entrepreneur</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-bold text-gray-900">Sarah Johnson</p>
-                  <p className="text-gray-600">Online Business Owner</p>
+                
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-600">
+                  <div className="flex items-center mb-4">
+                    <div className="flex space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-4 h-4 bg-green-600 rounded-full"></div>
+                      ))}
+                    </div>
+                    <span className="ml-3 text-gray-600 font-medium text-sm">Verified Purchase</span>
+                  </div>
+                  <p className="text-gray-800 mb-4 leading-relaxed">
+                    "Finally, a product that delivers what it promises. The quality is exceptional and support is amazing!"
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      A
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900">Alex Rivera</p>
+                      <p className="text-gray-600 text-sm">Marketing Consultant</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg border-l-4 border-yellow-500">
-              <div className="flex items-center mb-6">
-                <div className="flex text-yellow-500">
-                  {[...Array(5)].map((_, i) => (
-                    <i key={i} className="fas fa-star text-xl"></i>
-                  ))}
-                </div>
-                <span className="ml-3 text-gray-600 font-medium">Verified Purchase</span>
-              </div>
-              <p className="text-gray-800 mb-6 text-lg italic leading-relaxed">
-                "The best investment I've made in my online business! Everything is done-for-you and ready to implement immediately."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                  M
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900">Mike Chen</p>
-                  <p className="text-gray-600">Digital Entrepreneur</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg border-l-4 border-yellow-500">
-              <div className="flex items-center mb-6">
-                <div className="flex text-yellow-500">
-                  {[...Array(5)].map((_, i) => (
-                    <i key={i} className="fas fa-star text-xl"></i>
-                  ))}
-                </div>
-                <span className="ml-3 text-gray-600 font-medium">Verified Purchase</span>
-              </div>
-              <p className="text-gray-800 mb-6 text-lg italic leading-relaxed">
-                "Finally, a product that delivers what it promises. The quality is exceptional and support is amazing!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                  A
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900">Alex Rivera</p>
-                  <p className="text-gray-600">Marketing Consultant</p>
+
+            {/* Left Content - Image Placeholder */}
+            <div className="lg:order-1">
+              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <svg className="w-48 h-32 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Customer Testimonials</p>
+                  <p className="text-sm text-gray-500">Real Success Stories</p>
                 </div>
               </div>
             </div>
@@ -277,67 +356,115 @@ export default function Landing() {
       {/* How It Works Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">How It Works</h2>
-          <p className="text-xl text-gray-600 text-center mb-16">Three simple steps to start earning</p>
-          
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-                <span className="text-white text-3xl font-bold">1</span>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">How It Works</h2>
+              <p className="text-xl text-gray-600 mb-10">Three simple steps to start earning</p>
+              
+              <div className="space-y-8">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-6 flex-shrink-0">
+                    <span className="text-white text-xl font-bold">1</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Purchase & Download</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Buy today and get instant access to all materials, licenses, and bonuses. Everything is delivered digitally within minutes.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-6 flex-shrink-0">
+                    <span className="text-white text-xl font-bold">2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Customize & Brand</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Use our templates and materials to create your branded version. No technical skills required - just follow our simple guides.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-6 flex-shrink-0">
+                    <span className="text-white text-xl font-bold">3</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Sell & Profit</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Launch your sales and keep 100% of the profits. No royalties, no limits, no ongoing fees ever.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Purchase & Download</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Buy today and get instant access to all materials, licenses, and bonuses
-              </p>
-              <div className="hidden md:block absolute top-12 left-full w-12 h-0.5 bg-gray-300 transform -translate-y-1/2"></div>
             </div>
-            
-            <div className="text-center relative">
-              <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-                <span className="text-white text-3xl font-bold">2</span>
+
+            {/* Right Content - Image Placeholder */}
+            <div>
+              <div className="bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl p-8 h-96 flex items-center justify-center">
+                <svg className="w-64 h-48 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Step-by-Step Process</p>
+                  <p className="text-sm text-gray-500">Simple Implementation Guide</p>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Customize & Brand</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Use our templates and materials to create your branded version
-              </p>
-              <div className="hidden md:block absolute top-12 left-full w-12 h-0.5 bg-gray-300 transform -translate-y-1/2"></div>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-                <span className="text-white text-3xl font-bold">3</span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Sell & Profit</h3>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Launch your sales and keep 100% of the profits - no limits!
-              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Limited-Time Bonuses Section */}
-      <section className="py-20 bg-red-50">
+      <section className="py-20 bg-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">Limited-Time Bonuses</h2>
-          <p className="text-xl text-red-600 font-bold text-center mb-16">⏰ These bonuses expire in 24 hours!</p>
-          
-          <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="flex items-center bg-white p-8 rounded-2xl shadow-lg border-l-4 border-orange-500">
-              <div className="text-5xl mr-8">🔥</div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">FREE Bonus #1: High-Ticket Upsell Scripts</h3>
-                <p className="text-lg text-gray-600 mb-2">Proven scripts that convert browsers into buyers</p>
-                <p className="text-green-600 font-bold text-xl">Value: $97</p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Right Content */}
+            <div className="lg:order-2">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Limited-Time Bonuses</h2>
+              <p className="text-xl text-blue-600 font-bold mb-10">These bonuses expire in 24 hours!</p>
+              
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                      <span className="text-white font-bold">1</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">FREE Bonus: High-Ticket Upsell Scripts</h3>
+                      <p className="text-gray-600 mb-2">Proven scripts that convert browsers into buyers</p>
+                      <p className="text-green-600 font-bold">Value: $97</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                      <span className="text-white font-bold">2</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">FREE Bonus: Done-For-You Email Campaigns</h3>
+                      <p className="text-gray-600 mb-2">Complete email sequences for maximum conversions</p>
+                      <p className="text-green-600 font-bold">Value: $147</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center bg-white p-8 rounded-2xl shadow-lg border-l-4 border-orange-500">
-              <div className="text-5xl mr-8">🔥</div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">FREE Bonus #2: Done-For-You Email Campaigns</h3>
-                <p className="text-lg text-gray-600 mb-2">Complete email sequences for maximum conversions</p>
-                <p className="text-green-600 font-bold text-xl">Value: $147</p>
+
+            {/* Left Content - Image Placeholder */}
+            <div className="lg:order-1">
+              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <svg className="w-48 h-32 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Bonus Materials</p>
+                  <p className="text-sm text-gray-500">Extra Value Added</p>
+                </div>
               </div>
             </div>
           </div>
@@ -345,38 +472,54 @@ export default function Landing() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">Special Launch Pricing</h2>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-12 mb-12">
-            <div className="text-7xl md:text-9xl font-bold mb-6">
-              $49
+      <section className="py-20 bg-gradient-to-br from-green-500 via-blue-500 to-green-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div>
+              <h2 className="text-4xl font-bold mb-8">Special Launch Pricing</h2>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8">
+                <div className="text-6xl font-bold mb-4">$49</div>
+                <div className="text-2xl mb-4">
+                  <span className="line-through opacity-75">$197</span>
+                  <span className="ml-4 bg-white text-green-600 px-3 py-1 rounded-full text-lg font-bold">Save 75%!</span>
+                </div>
+                
+                <div className="flex items-center mb-6">
+                  <div className="w-6 h-6 bg-white rounded-full mr-3"></div>
+                  <span className="text-lg">30-Day Money-Back Guarantee</span>
+                </div>
+                
+                <Button 
+                  asChild
+                  size="lg" 
+                  className="bg-white text-green-600 hover:bg-gray-100 font-bold text-xl py-6 px-12 rounded-xl shadow-lg w-full mb-4"
+                >
+                  <a href="/sales" data-testid="button-buy-now">YES! I WANT MASTER RESELL RIGHTS NOW</a>
+                </Button>
+                
+                <p className="text-sm opacity-90">One-time payment • No hidden fees • Instant access</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-white text-green-600 px-6 py-3 rounded-lg inline-block font-bold">
+                  ONLY 50 COPIES AVAILABLE AT THIS PRICE!
+                </div>
+              </div>
             </div>
-            <div className="text-3xl md:text-4xl mb-6">
-              <span className="line-through opacity-75">$197</span>
-              <span className="ml-4 bg-green-500 px-4 py-2 rounded-full text-xl">Save 75%!</span>
-            </div>
-            
-            <div className="flex items-center justify-center mb-8">
-              <i className="fas fa-shield-alt text-3xl mr-4"></i>
-              <span className="text-xl">30-Day Money-Back Guarantee</span>
-            </div>
-            
-            <Button 
-              asChild
-              size="lg" 
-              className="bg-white text-orange-600 hover:bg-gray-100 font-bold text-2xl py-8 px-16 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 mb-6"
-            >
-              <a href="/sales" data-testid="button-buy-now">👉 YES! I WANT MASTER RESELL RIGHTS NOW</a>
-            </Button>
-            
-            <p className="text-lg opacity-90">One-time payment • No hidden fees • Instant access</p>
-          </div>
-          
-          <div className="text-center">
-            <div className="bg-yellow-400 text-black px-6 py-3 rounded-full inline-block font-bold text-lg animate-pulse">
-              ⚠️ ONLY 50 COPIES AVAILABLE AT THIS PRICE!
+
+            {/* Right Content - Image Placeholder */}
+            <div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 h-96 flex items-center justify-center">
+                <svg className="w-64 h-48 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-white font-medium">Limited Time Offer</p>
+                  <p className="text-sm text-white/80">Secure Your Copy Now</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -384,70 +527,103 @@ export default function Landing() {
 
       {/* FAQ Section */}
       <section className="py-20 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-16">Frequently Asked Questions</h2>
-          
-          <div className="space-y-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-2xl mr-3">❓</span>
-                Can I really sell this as my own product?
-              </h3>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8">
-                <span className="text-green-600 font-bold">✅ Absolutely!</span> The Master Resell Rights license gives you complete legal authority to rebrand, customize, and sell these products as your own. You keep 100% of the profits with no royalties or ongoing fees.
-              </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Right Content */}
+            <div className="lg:order-2">
+              <h2 className="text-4xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
+              
+              <div className="space-y-6">
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">
+                    Can I really sell this as my own product?
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="text-green-600 font-bold">Absolutely!</span> The Master Resell Rights license gives you complete legal authority to rebrand, customize, and sell these products as your own. You keep 100% of the profits with no royalties or ongoing fees.
+                  </p>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">
+                    What if I'm not satisfied with my purchase?
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="text-blue-600 font-bold">Zero risk!</span> We offer a full 30-day money-back guarantee. If you're not completely satisfied, simply contact us for a full refund - no questions asked.
+                  </p>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-600">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">
+                    How quickly can I access the products?
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    <span className="text-green-600 font-bold">Instant delivery!</span> Immediately after your purchase is complete, you'll receive an email with download links to all products, bonuses, and your Master Resell Rights license.
+                  </p>
+                </div>
+              </div>
             </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-2xl mr-3">❓</span>
-                What if I'm not satisfied with my purchase?
-              </h3>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8">
-                <span className="text-green-600 font-bold">✅ Zero risk!</span> We offer a full 30-day money-back guarantee. If you're not completely satisfied, simply contact us for a full refund - no questions asked.
-              </p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-2xl mr-3">❓</span>
-                How quickly can I access the products?
-              </h3>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8">
-                <span className="text-green-600 font-bold">✅ Instant delivery!</span> Immediately after your purchase is complete, you'll receive an email with download links to all products, bonuses, and your Master Resell Rights license.
-              </p>
+
+            {/* Left Content - Image Placeholder */}
+            <div className="lg:order-1">
+              <div className="bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <svg className="w-48 h-32 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Questions & Answers</p>
+                  <p className="text-sm text-gray-500">Common Concerns Addressed</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-yellow-50 border-t-4 border-yellow-400">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-8">
-            <Badge variant="destructive" className="text-xl px-6 py-3 animate-pulse">
-              ⏰ FINAL WARNING: Price increases to $97 after 50 sales!
-            </Badge>
+      <section className="py-20 bg-white border-t-4 border-green-400">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div>
+              <div className="mb-6">
+                <Badge variant="destructive" className="text-lg px-4 py-2">
+                  FINAL WARNING: Price increases to $97 after 50 sales!
+                </Badge>
+              </div>
+              
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                Don't Miss This Opportunity
+              </h2>
+              
+              <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+                Join hundreds of entrepreneurs who are already building profitable businesses with our proven system.
+                The price will never be this low again.
+              </p>
+              
+              <Button 
+                asChild
+                size="lg" 
+                className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl py-6 px-12 rounded-xl shadow-lg mb-4"
+              >
+                <a href="/sales" data-testid="button-final-cta">SECURE MY COPY NOW - $49</a>
+              </Button>
+              
+              <p className="text-gray-600">30-Day Guarantee • Instant Download • Master Resell Rights Included</p>
+            </div>
+
+            {/* Right Content - Image Placeholder */}
+            <div>
+              <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl p-8 h-80 flex items-center justify-center">
+                <svg className="w-48 h-32 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                </svg>
+                <div className="ml-4">
+                  <p className="text-gray-600 font-medium">Take Action Now</p>
+                  <p className="text-sm text-gray-500">Limited Time Offer</p>
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-            Don't Miss This Opportunity
-          </h2>
-          
-          <p className="text-xl text-gray-700 mb-12 leading-relaxed">
-            Join hundreds of entrepreneurs who are already building profitable businesses with our proven system.
-            The price will never be this low again.
-          </p>
-          
-          <Button 
-            asChild
-            size="lg" 
-            className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-2xl py-8 px-16 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
-          >
-            <a href="/sales" data-testid="button-final-cta">🚀 SECURE MY COPY NOW - $49</a>
-          </Button>
-          
-          <p className="text-gray-600 mt-6">30-Day Guarantee • Instant Download • Master Resell Rights Included</p>
         </div>
       </section>
 
@@ -455,8 +631,8 @@ export default function Landing() {
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-500 mb-6">
-              <i className="fas fa-rocket mr-2"></i>Opian Entrepreneur
+            <div className="text-2xl font-bold text-green-500 mb-6">
+              Opian Entrepreneur
             </div>
             
             <div className="flex justify-center space-x-8 mb-6">

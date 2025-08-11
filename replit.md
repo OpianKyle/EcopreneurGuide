@@ -17,6 +17,7 @@ DigitalPro is a comprehensive sales funnel platform designed for selling digital
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Design preferences: Professional color scheme using green, blue, and white. Avoid childish icons. Use alternating left-right content sections instead of centered layouts.
 
 ## System Architecture
 
