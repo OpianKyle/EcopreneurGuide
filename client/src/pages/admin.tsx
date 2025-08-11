@@ -9,7 +9,7 @@ import type { Order, Lead, User } from "@shared/schema";
 
 export default function Admin() {
   const { toast } = useToast();
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, logoutMutation } = useAuth();
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -93,8 +93,13 @@ export default function Admin() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-700">Admin Panel</span>
-              <Button asChild variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-100">
-                <a href="/api/logout">Logout</a>
+              <Button 
+                variant="outline" 
+                className="text-gray-700 border-gray-300 hover:bg-gray-100"
+                onClick={() => logoutMutation.mutate()}
+                disabled={logoutMutation.isPending}
+              >
+                {logoutMutation.isPending ? "Logging out..." : "Logout"}
               </Button>
             </div>
           </div>
