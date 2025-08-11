@@ -102,7 +102,7 @@ export class DatabaseStorage implements IStorage {
   async createUser(userData: Partial<UpsertUser>): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(userData)
+      .values(userData as any)
       .returning();
     return user;
   }

@@ -17,22 +17,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   setupAuth(app);
 
-  // Auth routes
-  app.get('/api/user', (req: any, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    res.json({
-      id: req.user.id,
-      email: req.user.email,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
-      profileImageUrl: req.user.profileImageUrl,
-      isAdmin: req.user.isAdmin,
-      isVerified: req.user.isVerified
-    });
-  });
-
   // Lead capture
   app.post("/api/leads", async (req, res) => {
     try {

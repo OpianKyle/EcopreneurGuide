@@ -12,7 +12,15 @@ import connectPg from "connect-pg-simple";
 
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User {
+      id: string;
+      email: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      profileImageUrl?: string | null;
+      isAdmin?: boolean;
+      isVerified?: boolean;
+    }
   }
 }
 
@@ -72,7 +80,15 @@ export function setupAuth(app: Express) {
             return done(null, false, { message: "Invalid email or password" });
           }
           
-          return done(null, user);
+          return done(null, {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profileImageUrl: user.profileImageUrl,
+            isAdmin: user.isAdmin || false,
+            isVerified: user.isVerified || false
+          } as Express.User);
         } catch (error) {
           return done(error);
         }
@@ -115,7 +131,15 @@ export function setupAuth(app: Express) {
               }
             }
             
-            return done(null, user);
+            return done(null, {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImageUrl: user.profileImageUrl,
+              isAdmin: user.isAdmin || false,
+              isVerified: user.isVerified || false
+            } as Express.User);
           } catch (error) {
             return done(error);
           }
@@ -159,7 +183,15 @@ export function setupAuth(app: Express) {
               }
             }
             
-            return done(null, user);
+            return done(null, {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImageUrl: user.profileImageUrl,
+              isAdmin: user.isAdmin || false,
+              isVerified: user.isVerified || false
+            } as Express.User);
           } catch (error) {
             return done(error);
           }
@@ -168,11 +200,23 @@ export function setupAuth(app: Express) {
     );
   }
 
-  passport.serializeUser((user, done) => done(null, user.id));
+  passport.serializeUser((user: Express.User, done) => done(null, user.id));
   passport.deserializeUser(async (id: string, done) => {
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      if (user) {
+        done(null, {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          profileImageUrl: user.profileImageUrl,
+          isAdmin: user.isAdmin || false,
+          isVerified: user.isVerified || false
+        } as Express.User);
+      } else {
+        done(null, false);
+      }
     } catch (error) {
       done(error);
     }
@@ -200,15 +244,19 @@ export function setupAuth(app: Express) {
         lastName,
       });
 
-      req.login(user, (err) => {
+      const expressUser: Express.User = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        isAdmin: user.isAdmin || false,
+        isVerified: user.isVerified || false
+      };
+
+      req.login(expressUser, (err) => {
         if (err) return next(err);
-        res.status(201).json({ 
-          id: user.id, 
-          email: user.email, 
-          firstName: user.firstName, 
-          lastName: user.lastName,
-          isAdmin: user.isAdmin
-        });
+        res.status(201).json(expressUser);
       });
     } catch (error) {
       console.error("Registration error:", error);
@@ -223,15 +271,19 @@ export function setupAuth(app: Express) {
         return res.status(401).json({ message: info?.message || "Invalid credentials" });
       }
       
-      req.login(user, (err) => {
+      const expressUser: Express.User = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        isAdmin: user.isAdmin || false,
+        isVerified: user.isVerified || false
+      };
+
+      req.login(expressUser, (err) => {
         if (err) return next(err);
-        res.json({
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          isAdmin: user.isAdmin
-        });
+        res.json(expressUser);
       });
     })(req, res, next);
   });
@@ -264,7 +316,7 @@ export function setupAuth(app: Express) {
   });
 
   app.get("/api/user", (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
+    if (!req.isAuthenticated() || !req.user) return res.sendStatus(401);
     res.json({
       id: req.user.id,
       email: req.user.email,
