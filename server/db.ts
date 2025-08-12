@@ -127,6 +127,40 @@ export async function initializeDatabase() {
         is_converted INTEGER DEFAULT 0,
         created_at INTEGER
       );
+      
+      CREATE TABLE IF NOT EXISTS downloads (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        product_id TEXT NOT NULL,
+        download_url TEXT NOT NULL,
+        created_at INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        FOREIGN KEY (product_id) REFERENCES products (id)
+      );
+      
+      CREATE TABLE IF NOT EXISTS support_tickets (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        message TEXT NOT NULL,
+        status TEXT DEFAULT 'open',
+        priority TEXT DEFAULT 'medium',
+        created_at INTEGER,
+        updated_at INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+      );
+      
+      CREATE TABLE IF NOT EXISTS email_campaigns (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        content TEXT NOT NULL,
+        status TEXT DEFAULT 'draft',
+        sent_count INTEGER DEFAULT 0,
+        open_count INTEGER DEFAULT 0,
+        click_count INTEGER DEFAULT 0,
+        created_at INTEGER
+      );
     `);
     
     console.log('SQLite database initialized successfully with all tables');
