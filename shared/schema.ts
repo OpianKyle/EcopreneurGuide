@@ -71,6 +71,8 @@ export const products = pgTable("products", {
   description: text("description"),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   downloadUrl: varchar("download_url"),
+  fileName: varchar("file_name"), // Original filename of uploaded ZIP
+  fileSize: integer("file_size"), // File size in bytes
   categoryId: varchar("category_id").references(() => categories.id),
   subcategoryId: varchar("subcategory_id").references(() => subcategories.id),
   isActive: boolean("is_active").default(true),
@@ -221,6 +223,8 @@ export const insertProductSchema = createInsertSchema(products).omit({
   updatedAt: true,
 }).extend({
   price: z.coerce.number().positive("Price must be a positive number"),
+  fileName: z.string().optional(),
+  fileSize: z.number().optional(),
 });
 
 export const insertOrderSchema = createInsertSchema(orders).omit({

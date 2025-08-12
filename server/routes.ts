@@ -1,6 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, requireAuth, requireAdmin } from "./auth";
 import { insertLeadSchema, insertSupportTicketSchema, insertProductSchema, insertCategorySchema, insertSubcategorySchema } from "@shared/schema";
@@ -11,6 +14,37 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-07-30.basil",
+});
+
+// Configure multer for file uploads
+const storage_multer = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(process.cwd(), 'uploads');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    // Generate unique filename with timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage_multer,
+  fileFilter: (req, file, cb) => {
+    // Only allow ZIP files
+    if (file.mimetype === 'application/zip' || path.extname(file.originalname).toLowerCase() === '.zip') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only ZIP files are allowed'));
+    }
+  },
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  }
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -88,6 +122,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // File upload endpoint
+  app.post("/api/upload", requireAdmin, upload.single('file'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+      
+      const fileInfo = {
+        filename: req.file.filename,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        path: req.file.path
+      };
+      
+      res.json(fileInfo);
+    } catch (error: any) {
+      res.status(400).json({ message: "Error uploading file: " + error.message });
+    }
+  });
+
   app.post("/api/products", requireAdmin, async (req: any, res) => {
     try {
       const productData = insertProductSchema.parse(req.body);
@@ -96,6 +150,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       res.status(400).json({ message: "Error creating product: " + error.message });
     }
+  });
+
+  // File download endpoint - protected route for customers who purchased
+  app.get("/api/download/:productId", requireAuth, async (req: any, res) => {
+    try {
+      const { productId } = req.params;
+      const userId = req.user.id;
+      
+      // Check if user has purchased this product
+      const order = await storage.getUserProductOrder(userId, productId);
+      if (!order || order.status !== 'completed') {
+        return res.status(403).json({ message: "Access denied. Product not purchased." });
+      }
+      
+      const product = await storage.getProduct(productId);
+      if (!product || !product.fileName) {
+        return res.status(404).json({ message: "Product file not found" });
+      }
+      
+      const filePath = path.join(process.cwd(), 'uploads', product.fileName);
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ message: "File not found on server" });
+      }
+      
+      // Set headers for file download
+      res.setHeader('Content-Disposition', `attachment; filename="${product.name}.zip"`);
+      res.setHeader('Content-Type', 'application/zip');
+      
+      // Stream the file
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+      
+      // Track download
+      await storage.createDownload({
+        userId,
+        productId,
+        downloadedAt: new Date(),
+      });
+      
+    } catch (error: any) {
+      res.status(500).json({ message: "Error downloading file: " + error.message });
+    }
+  });
+
+  // Static files for uploads (for admin preview only)
+  app.use('/uploads', requireAdmin, (req, res, next) => {
+    next();
   });
 
   // Payment processing

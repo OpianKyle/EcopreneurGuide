@@ -15,6 +15,7 @@ import Products from "@/pages/products";
 import Checkout from "@/pages/checkout.tsx";
 import Home from "@/pages/home.tsx";
 import Auth from "@/pages/auth";
+import MyPurchases from "@/pages/my-purchases";
 
 function Router() {
   const { user, isLoading } = useAuth();
@@ -32,6 +33,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/products" component={Products} />
+          <Route path="/my-purchases" component={MyPurchases} />
           <Route path="/admin" component={Admin} />
           <Route path="/admin/products" component={AdminProducts} />
           <Route path="/sales" component={Sales} />

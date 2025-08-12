@@ -67,6 +67,7 @@ export interface IStorage {
   getOrdersByUser(userId: string): Promise<Order[]>;
   getAllOrders(): Promise<Order[]>;
   updateOrderStatus(id: string, status: string): Promise<Order>;
+  getUserProductOrder(userId: string, productId: string): Promise<Order | undefined>;
 
   // Lead operations
   createLead(lead: InsertLead): Promise<Lead>;
@@ -303,6 +304,15 @@ export class DatabaseStorage implements IStorage {
       .where(eq(orders.id, id))
       .returning();
     return updatedOrder;
+  }
+
+  async getUserProductOrder(userId: string, productId: string): Promise<Order | undefined> {
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(and(eq(orders.userId, userId), eq(orders.productId, productId)))
+      .orderBy(desc(orders.createdAt));
+    return order;
   }
 
   // Lead operations

@@ -21,6 +21,12 @@ interface ProductFormData {
   subcategoryId: string;
 }
 
+interface UploadedFileInfo {
+  filename: string;
+  originalName: string;
+  size: number;
+}
+
 export default function AdminProducts() {
   const { toast } = useToast();
   const { isAuthenticated, user } = useAuth();
@@ -34,6 +40,8 @@ export default function AdminProducts() {
     categoryId: "",
     subcategoryId: "",
   });
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState<UploadedFileInfo | null>(null);
 
   // Fetch data
   const { data: categories = [] } = useQuery<Category[]>({
@@ -59,6 +67,25 @@ export default function AdminProducts() {
     sub => sub.categoryId === formData.categoryId
   );
 
+  // File upload mutation
+  const fileUploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+      
+      return response.json();
+    },
+  });
+
   // Create product mutation
   const createProductMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -67,6 +94,8 @@ export default function AdminProducts() {
         price: data.price,
         categoryId: data.categoryId || null,
         subcategoryId: data.subcategoryId || null,
+        fileName: uploadedFileInfo?.filename || null,
+        fileSize: uploadedFileInfo?.size || null,
       });
     },
     onSuccess: () => {
@@ -83,6 +112,8 @@ export default function AdminProducts() {
         categoryId: "",
         subcategoryId: "",
       });
+      setUploadedFile(null);
+      setUploadedFileInfo(null);
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
     },
     onError: (error: any) => {
@@ -94,7 +125,33 @@ export default function AdminProducts() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleFileUpload = async (file: File) => {
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      toast({
+        title: "Error",
+        description: "Only ZIP files are allowed",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      const result = await fileUploadMutation.mutateAsync(file);
+      setUploadedFileInfo(result);
+      toast({
+        title: "Success",
+        description: "File uploaded successfully!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to upload file",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.categoryId) {
       toast({
@@ -104,6 +161,12 @@ export default function AdminProducts() {
       });
       return;
     }
+    
+    // Upload file first if one is selected
+    if (uploadedFile && !uploadedFileInfo) {
+      await handleFileUpload(uploadedFile);
+    }
+    
     createProductMutation.mutate(formData);
   };
 
@@ -229,6 +292,42 @@ export default function AdminProducts() {
                   />
                 </div>
 
+                <div>
+                  <Label htmlFor="file">Product ZIP File</Label>
+                  <Input
+                    id="file"
+                    type="file"
+                    accept=".zip"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setUploadedFile(file);
+                        setUploadedFileInfo(null);
+                      }
+                    }}
+                    data-testid="input-product-file"
+                  />
+                  {uploadedFile && (
+                    <div className="mt-2 p-2 bg-blue-50 rounded">
+                      <p className="text-sm text-blue-800">
+                        Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </p>
+                    </div>
+                  )}
+                  {uploadedFileInfo && (
+                    <div className="mt-2 p-2 bg-green-50 rounded">
+                      <p className="text-sm text-green-800">
+                        ✓ File uploaded: {uploadedFileInfo.originalName} ({(uploadedFileInfo.size / 1024 / 1024).toFixed(2)} MB)
+                      </p>
+                    </div>
+                  )}
+                  {fileUploadMutation.isPending && (
+                    <div className="mt-2 p-2 bg-yellow-50 rounded">
+                      <p className="text-sm text-yellow-800">Uploading file...</p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="category">Category *</Label>
@@ -314,6 +413,14 @@ export default function AdminProducts() {
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {product.description || "No description available"}
                 </p>
+                {(product as any).fileName && (
+                  <div className="mb-3 p-2 bg-gray-50 rounded text-xs text-gray-600">
+                    📁 File: {(product as any).fileName}
+                    {(product as any).fileSize && (
+                      <span> ({((product as any).fileSize / 1024 / 1024).toFixed(2)} MB)</span>
+                    )}
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
                   <span className="text-2xl font-bold text-green-600">
                     ${product.price}
