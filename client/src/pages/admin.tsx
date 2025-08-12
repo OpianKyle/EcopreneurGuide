@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { Button } from "@/components/ui/button";
+import Sidebar from "@/components/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Order, Lead, User } from "@shared/schema";
 
@@ -81,38 +82,12 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <div className="text-2xl font-bold text-blue-600">DigitalPro</div>
-              <div className="flex space-x-4">
-                <Button asChild variant="ghost" className="bg-blue-50">
-                  <a href="/admin">Dashboard</a>
-                </Button>
-                <Button asChild variant="ghost" data-testid="nav-manage-products">
-                  <a href="/admin/products">Manage Products</a>
-                </Button>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Admin Panel</span>
-              <Button 
-                variant="outline" 
-                className="text-gray-700 border-gray-300 hover:bg-gray-100"
-                onClick={() => logoutMutation.mutate()}
-                disabled={logoutMutation.isPending}
-              >
-                {logoutMutation.isPending ? "Logging out..." : "Logout"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar currentPath="/admin" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 lg:pl-0 pt-16 lg:pt-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Admin Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard 🔧</h1>
@@ -272,6 +247,7 @@ export default function Admin() {
               )}
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>

@@ -40,6 +40,8 @@ export interface IStorage {
   updateUser(id: string, userData: Partial<UpsertUser>): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId?: string): Promise<User>;
+  markUserAsPaid(userId: string): Promise<User>;
+  getUserProducts(userId: string): Promise<Product[]>;
 
   // Category operations
   getCategories(): Promise<Category[]>;
@@ -158,11 +160,36 @@ export class DatabaseStorage implements IStorage {
       .set({
         stripeCustomerId: customerId,
         stripeSubscriptionId: subscriptionId,
+        hasPaid: true, // Mark user as paid when Stripe info is updated
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId))
       .returning();
     return user;
+  }
+
+  async markUserAsPaid(userId: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({ hasPaid: true, updatedAt: new Date() })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  async getUserProducts(userId: string): Promise<Product[]> {
+    // Get user to check if they have paid
+    const user = await this.getUser(userId);
+    if (!user) {
+      return [];
+    }
+
+    // If user has paid, return all products; otherwise return empty array
+    if (user.hasPaid || user.isAdmin) {
+      return await this.getProducts();
+    }
+
+    return [];
   }
 
   // Category operations

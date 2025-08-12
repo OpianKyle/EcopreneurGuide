@@ -1,26 +1,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import Sidebar from "@/components/Sidebar";
 
 export default function Sales() {
   const [isVideoWatched, setIsVideoWatched] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-brand-blue">
-                <i className="fas fa-rocket mr-2"></i>DigitalPro
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar currentPath="/sales" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 lg:pl-0 pt-16 lg:pt-0">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Headline */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
@@ -149,6 +141,7 @@ export default function Sales() {
         <div className="text-center bg-brand-red text-white p-6 rounded-lg">
           <h3 className="text-2xl font-bold mb-2">⏰ Don't Wait - Price Increases Soon!</h3>
           <p className="text-lg">This special price is only available for a limited time. Don't miss out on this opportunity to transform your life!</p>
+        </div>
         </div>
       </div>
     </div>

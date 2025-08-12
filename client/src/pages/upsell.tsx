@@ -1,23 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Sidebar from "@/components/Sidebar";
 
 export default function Upsell() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="text-2xl font-bold text-brand-blue">
-                <i className="fas fa-rocket mr-2"></i>DigitalPro
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar currentPath="/upsell" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div className="flex-1 lg:pl-0 pt-16 lg:pt-0">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Congratulations Header */}
         <div className="text-center mb-12">
           <div className="text-6xl mb-4">🎉</div>
@@ -160,6 +152,7 @@ export default function Upsell() {
             </p>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

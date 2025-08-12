@@ -263,6 +263,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User products (all products if paid, empty if not)
+  app.get("/api/my-products", requireAuth, async (req: any, res) => {
+    try {
+      const products = await storage.getUserProducts(req.user.id);
+      res.json(products);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching user products: " + error.message });
+    }
+  });
+
+  // Mark user as paid after successful payment
+  app.post("/api/mark-paid", requireAuth, async (req: any, res) => {
+    try {
+      const user = await storage.markUserAsPaid(req.user.id);
+      res.json({ success: true, user });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error marking user as paid: " + error.message });
+    }
+  });
+
   // Support tickets
   app.post("/api/support-tickets", requireAuth, async (req: any, res) => {
     try {

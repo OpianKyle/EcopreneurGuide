@@ -37,6 +37,7 @@ export const users = pgTable("users", {
   githubId: varchar("github_id"), // for GitHub OAuth
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
+  hasPaid: boolean("has_paid").default(false),
   isAdmin: boolean("is_admin").default(false),
   isVerified: boolean("is_verified").default(false),
   createdAt: timestamp("created_at").defaultNow(),
