@@ -1,140 +1,138 @@
 import { sql } from 'drizzle-orm';
 import {
   index,
-  jsonb,
-  pgTable,
-  timestamp,
-  varchar,
+  sqliteTable,
   text,
   integer,
-  boolean,
-  decimal,
-} from "drizzle-orm/pg-core";
+  real,
+} from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Session storage table - mandatory for Replit Auth
-export const sessions = pgTable(
+export const sessions = sqliteTable(
   "sessions",
   {
-    sid: varchar("sid").primaryKey(),
-    sess: jsonb("sess").notNull(),
-    expire: timestamp("expire").notNull(),
+    sid: text("sid").primaryKey(),
+    sess: text("sess").notNull(),
+    expire: integer("expire").notNull(),
   },
-  (table) => [index("IDX_session_expire").on(table.expire)],
+  (table) => ({
+    expire_idx: index("IDX_session_expire").on(table.expire),
+  }),
 );
 
 // Users table
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar("email").unique().notNull(),
-  password: varchar("password"), // for manual registration
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  googleId: varchar("google_id"), // for Google OAuth
-  githubId: varchar("github_id"), // for GitHub OAuth
-  stripeCustomerId: varchar("stripe_customer_id"),
-  stripeSubscriptionId: varchar("stripe_subscription_id"),
-  hasPaid: boolean("has_paid").default(false),
-  isAdmin: boolean("is_admin").default(false),
-  isVerified: boolean("is_verified").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  email: text("email").unique().notNull(),
+  password: text("password"), // for manual registration
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  profileImageUrl: text("profile_image_url"),
+  googleId: text("google_id"), // for Google OAuth
+  githubId: text("github_id"), // for GitHub OAuth
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  hasPaid: integer("has_paid", { mode: 'boolean' }).default(false),
+  isAdmin: integer("is_admin", { mode: 'boolean' }).default(false),
+  isVerified: integer("is_verified", { mode: 'boolean' }).default(false),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Categories table
-export const categories = pgTable("categories", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: varchar("name").notNull().unique(),
+export const categories = sqliteTable("categories", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull().unique(),
   description: text("description"),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  isActive: integer("is_active", { mode: 'boolean' }).default(true),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Subcategories table
-export const subcategories = pgTable("subcategories", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: varchar("name").notNull(),
+export const subcategories = sqliteTable("subcategories", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
   description: text("description"),
-  categoryId: varchar("category_id").references(() => categories.id).notNull(),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  categoryId: text("category_id").references(() => categories.id).notNull(),
+  isActive: integer("is_active", { mode: 'boolean' }).default(true),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Products table
-export const products = pgTable("products", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: varchar("name").notNull(),
+export const products = sqliteTable("products", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
   description: text("description"),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  downloadUrl: varchar("download_url"),
-  fileName: varchar("file_name"), // Original filename of uploaded ZIP
+  price: real("price").notNull(),
+  downloadUrl: text("download_url"),
+  fileName: text("file_name"), // Original filename of uploaded ZIP
   fileSize: integer("file_size"), // File size in bytes
-  categoryId: varchar("category_id").references(() => categories.id),
-  subcategoryId: varchar("subcategory_id").references(() => subcategories.id),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  categoryId: text("category_id").references(() => categories.id),
+  subcategoryId: text("subcategory_id").references(() => subcategories.id),
+  isActive: integer("is_active", { mode: 'boolean' }).default(true),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Orders table
-export const orders = pgTable("orders", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  productId: varchar("product_id").references(() => products.id).notNull(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
-  status: varchar("status").notNull().default("pending"), // pending, completed, failed, refunded
-  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const orders = sqliteTable("orders", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id").references(() => users.id).notNull(),
+  productId: text("product_id").references(() => products.id).notNull(),
+  amount: real("amount").notNull(),
+  status: text("status").notNull().default("pending"), // pending, completed, failed, refunded
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Leads table for email capture
-export const leads = pgTable("leads", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  firstName: varchar("first_name").notNull(),
-  email: varchar("email").notNull().unique(),
-  source: varchar("source").default("landing_page"),
-  isConverted: boolean("is_converted").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
+export const leads = sqliteTable("leads", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  firstName: text("first_name").notNull(),
+  email: text("email").notNull().unique(),
+  source: text("source").default("landing_page"),
+  isConverted: integer("is_converted", { mode: 'boolean' }).default(false),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Email campaigns table
-export const emailCampaigns = pgTable("email_campaigns", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  name: varchar("name").notNull(),
-  subject: varchar("subject").notNull(),
+export const emailCampaigns = sqliteTable("email_campaigns", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  subject: text("subject").notNull(),
   content: text("content").notNull(),
-  status: varchar("status").notNull().default("draft"), // draft, active, paused, completed
+  status: text("status").notNull().default("draft"), // draft, active, paused, completed
   sentCount: integer("sent_count").default(0),
   openCount: integer("open_count").default(0),
   clickCount: integer("click_count").default(0),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Support tickets table
-export const supportTickets = pgTable("support_tickets", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  subject: varchar("subject").notNull(),
+export const supportTickets = sqliteTable("support_tickets", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id").references(() => users.id).notNull(),
+  subject: text("subject").notNull(),
   message: text("message").notNull(),
-  status: varchar("status").notNull().default("open"), // open, in_progress, resolved, closed
-  priority: varchar("priority").default("medium"), // low, medium, high, urgent
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  status: text("status").notNull().default("open"), // open, in_progress, resolved, closed
+  priority: text("priority").default("medium"), // low, medium, high, urgent
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Downloads tracking table
-export const downloads = pgTable("downloads", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  productId: varchar("product_id").references(() => products.id).notNull(),
-  downloadUrl: varchar("download_url").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+export const downloads = sqliteTable("downloads", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id").references(() => users.id).notNull(),
+  productId: text("product_id").references(() => products.id).notNull(),
+  downloadUrl: text("download_url").notNull(),
+  createdAt: integer("created_at", { mode: 'timestamp' }).$defaultFn(() => new Date()),
 });
 
 // Relations
