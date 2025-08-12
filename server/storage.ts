@@ -292,14 +292,28 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createProduct(product: InsertProduct): Promise<Product> {
-    const [newProduct] = await db.insert(products).values(product).returning();
+    const productData = {
+      ...product,
+      price: product.price.toString(),
+    };
+    const [newProduct] = await db.insert(products).values(productData as any).returning();
     return newProduct;
   }
 
   async updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product> {
+    const updateData = {
+      ...product,
+      updatedAt: new Date(),
+    };
+    
+    // Convert price to string if it exists
+    if (updateData.price !== undefined) {
+      updateData.price = updateData.price.toString() as any;
+    }
+    
     const [updatedProduct] = await db
       .update(products)
-      .set({ ...product, updatedAt: new Date() })
+      .set(updateData as any)
       .where(eq(products.id, id))
       .returning();
     return updatedProduct;

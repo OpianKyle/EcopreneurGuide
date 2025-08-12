@@ -186,7 +186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createDownload({
         userId,
         productId,
-        downloadedAt: new Date(),
+        downloadUrl: `/api/products/${productId}/download`,
       });
       
     } catch (error: any) {
