@@ -25,7 +25,7 @@ DigitalPro is a comprehensive sales funnel platform designed for selling digital
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
-Design preferences: Professional color scheme using green, blue, and white. Avoid childish icons. Use alternating left-right content sections instead of centered layouts. Dashboard should follow Entrepedia.co design patterns with clean, modern interfaces, rounded cards, professional typography, and excellent visual hierarchy.
+Design preferences: Professional color scheme using green, blue, and white. Avoid childish icons. Use alternating left-right content sections instead of centered layouts. Dashboard should follow Entrepedia.co design patterns with clean, modern interfaces, rounded cards, professional typography, excellent visual hierarchy, and sidebar navigation instead of horizontal navbar.
 
 ## System Architecture
 
