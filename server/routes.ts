@@ -7,6 +7,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { setupAuth, requireAuth, requireAdmin } from "./auth";
 import { insertLeadSchema, insertSupportTicketSchema, insertProductSchema, insertCategorySchema, insertSubcategorySchema } from "@shared/schema";
+import { initializeDatabase } from "./db";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -48,6 +49,9 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize database schema on startup
+  await initializeDatabase();
+  
   // Auth middleware
   setupAuth(app);
 
